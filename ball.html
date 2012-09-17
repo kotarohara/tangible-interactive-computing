@@ -49,12 +49,18 @@
   </style> 
 
   <script> 
-// CamelCase
-// http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
+  // Great thanks to Corey Menscher.
+  // How to use accelerometer API
+  // http://menscher.com/teaching/woaa/examples/html5_accelerometer.html
+  
+  
+  // Greg Dean
+  // CamelCase function
+  // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+  function toTitleCase(str)
+  {
+      return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
   
   // Position Variables
   var x = 0;
