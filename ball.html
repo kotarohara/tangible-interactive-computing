@@ -1,0 +1,184 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>Where is my state.</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+  <meta name="viewport" content="width=device-width,user-scalable=no" /> 
+
+  <style> 
+  body {
+    background-color: #fefefe;
+    background-image: url(USMap.jpg);
+	background-repeat: no-repeat;
+    color: white;
+    font-family: Helvetica, Verdana, Sans Serif;
+    font-size: 10px;
+    background-size: cover
+  }
+  
+  #no {
+  	display: none;	
+  }
+  
+  #ball {
+  	width: 20px;
+  	height: 20px;
+  	border-radius: 10px;
+  	-webkit-radius: 10px;
+  	background-color: rgba(30, 120, 120, 0.5);
+  	position:absolute;
+  	top: 0px;
+  	left: 0px;
+  }
+  
+  #basket {
+  	background: none;
+  	height: 30px;
+  	left: 30px;
+  	position: absolute;
+	top: 20px;  	
+  	width: 30px;
+  }
+  
+  #title {
+  	color: black;
+  	left: 30px;
+  	position: absolute:
+  	top: 500px;
+  }
+  </style> 
+
+  <script> 
+// CamelCase
+// http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+  
+  // Position Variables
+  var x = 0;
+  var y = 0;
+   
+  // Speed - Velocity
+  var vx = 0;
+  var vy = 0;
+   
+  // Acceleration
+  var ax = 0;
+  var ay = 0;
+   
+  var delay = 10;
+  var vMultiplier = 0.1;
+  
+  var states = ['maryland', 'texas', 'california'],
+	  coord = {
+  	'texas': {
+  		'left' : 120,
+  		'top' : 120,
+  		'width' : 50,
+  		'height' : 70
+  	},
+  	'maryland' : {
+  		'left' : 265,
+  		'top' : 80,
+  		'width' : 10,
+  		'height' : 10
+  	},
+  	'california' : {
+  		'left' : 15,
+  		'top' : 40,
+  		'width' : 30,
+  		'height' : 80
+  	}	
+  };
+  
+  window.onload = function() {
+    if (window.DeviceMotionEvent==undefined) {
+    	document.getElementById("no").style.display="block";
+    	document.getElementById("yes").style.display="none";
+     
+    } else {
+    	window.ondevicemotion = function(event) {
+    	 
+    		ax = event.accelerationIncludingGravity.x;
+    		ay = event.accelerationIncludingGravity.y;
+    	}
+
+     	var basket = document.getElementById("basket"),
+     		basket_width,
+     		basket_height,
+     		basket_x,
+     		basket_y,
+     		goaled = false,
+     		r = 10,
+     		target;
+     		
+     	// Define target state and coordinate of the basket.
+     	var idx = Math.floor(Math.random() * states.length);
+     	target = states[idx];
+     	
+     	alert("Where is " + toTitleCase(target) + "?");
+     	
+     	basket_width = coord[target].width;
+     	basket_height = coord[target].height;
+     	basket_left = coord[target].left;
+     	basket_top = coord[target].top;
+     	
+     	basket.style.top = basket_top + "px";
+    	basket.style.left = basket_left + "px";
+    	basket.style.height = basket_height + "px";
+    	basket.style.width = basket_width + "px";
+    	basket.style.background = "none"; // "rgba(200, 30, 30, 0.5)";
+    		
+    	setInterval(function() {
+    		vy = vy + -(ay);
+    		vx = vx + ax;
+     
+    		var ball = document.getElementById("ball");
+    			
+    		y = parseInt(y + vy * vMultiplier);
+    		x = parseInt(x + vx * vMultiplier);
+    		
+    		if (x<0) { x = 0; vx = 0; }
+    		if (y<0) { y = 0; vy = 0; }
+    		if (x>document.documentElement.clientWidth - 20) { x = document.documentElement.clientWidth - 20; vx = 0; }
+    		if (y>document.documentElement.clientHeight - 20) { y = document.documentElement.clientHeight - 20; vy = 0; }
+			
+			
+			if (!goaled && basket_left < x + r && x + r < basket_left + basket_width && basket_top < y + r && y + r < basket_top + basket_height) {
+				goaled = true;
+				basket.style.top += 10;
+				basket.style.left += 10;
+				alert("That's right!");
+				location.reload();
+			}
+			
+			if (goaled && (basket_x - 10 > x || x > basket_x + basket_width + 10) || (basket_y - 10 > y || y > basket_y + basket_height + 10)) {
+				goaled = false;
+			}
+    		ball.style.top = y + "px";
+    		ball.style.left = x + "px";
+    		document.getElementById("pos").innerHTML = "x=" + x + "<br />y=" + y;
+    	}, delay);
+    } 
+  };
+  </script> 
+
+</head> 
+ 
+<body> 
+  <div id="content"> 
+
+      <div id="yes"> 
+          <!-- <div id="pos">x=0<br />y=0</div>-->
+          <div id="basket"></div>
+          <div id="ball"></div>
+			
+      </div> 
+      <div id="no"> 
+      Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.    
+      </div> 
+  </div> 
+</body> 
+</html> 
