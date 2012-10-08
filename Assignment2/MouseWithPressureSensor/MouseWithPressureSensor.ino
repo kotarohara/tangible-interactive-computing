@@ -1,3 +1,6 @@
+// We used code snippets from Arduino MouseKeyboard API page
+// http://arduino.cc/en/Reference/MouseKeyboard
+
 int pressurePin_FR = A0;
 int pressurePin_BR = A1;
 int pressurePin_BL = A2;
